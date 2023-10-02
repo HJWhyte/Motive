@@ -1,0 +1,34 @@
+name: pr_pipeline_motive
+
+trigger: none
+
+parameters:
+  - name: PythonVersion
+    type: string
+    values:
+      - 3.9
+      - 3.10
+      - 3.11
+    default: 3.11
+
+pool:
+  vmImage: windows-latest
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.PythonVersion}}'
+    inputs:
+      versionSpec: ${{ parameters.PythonVersion}}
+
+  - script: |
+      pip install -r requirements.txt
+      pytest --junitxml=TEST-unit.xml
+    workingDirectory: tests
+    displayName: 'Unit : Pytest'
+
+    - task: PublishTestResults@2
+    displayName: 'Publish Test Results **/TEST-*.xml'
+    inputs:
+      searchFolder: tests/ci
+      failTaskOnFailedTests: true
+    condition: always()
