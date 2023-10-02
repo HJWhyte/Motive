@@ -1,0 +1,15 @@
+name: pr_pipeline_motive
+
+trigger: none
+
+parameters:
+  - name: PythonVersion
+    type: string
+    values:
+      - 3.9
+      - 3.10
+      - 3.11
+    default: 3.11
+
+pool:
+  vmImage: windows-latest
