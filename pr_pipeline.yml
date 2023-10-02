@@ -19,3 +19,16 @@ steps:
     displayName: 'Use Python ${{ parameters.PythonVersion}}'
     inputs:
       versionSpec: ${{ parameters.PythonVersion}}
+
+  - script: |
+      pip install -r requirements.txt
+      pytest --junitxml=TEST-unit.xml
+    workingDirectory: tests
+    displayName: 'Unit : Pytest'
+
+    - task: PublishTestResults@2
+    displayName: 'Publish Test Results **/TEST-*.xml'
+    inputs:
+      searchFolder: tests/ci
+      failTaskOnFailedTests: true
+    condition: always()
