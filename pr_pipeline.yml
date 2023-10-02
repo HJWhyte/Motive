@@ -1,4 +1,4 @@
-name: pr_pipeline_motive
+name: "$(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)
 
 trigger: none
 
@@ -26,7 +26,7 @@ steps:
     workingDirectory: tests
     displayName: 'Unit : Pytest'
 
-    - task: PublishTestResults@2
+  - task: PublishTestResults@2
     displayName: 'Publish Test Results **/TEST-*.xml'
     inputs:
       searchFolder: tests/ci
