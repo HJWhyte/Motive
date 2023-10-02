@@ -22,7 +22,7 @@ steps:
 
   - script: |
       pip install -r requirements.txt
-      python -m pytest --junitxml=TEST-unit.xml
+      pytest --junitxml=TEST-unit.xml
     workingDirectory: tests
     displayName: 'Unit : Pytest'
 
