@@ -16,6 +16,9 @@ client = pymongo.MongoClient(CONNECTION_STRING)
 # Connect to the assigned DB 
 db = client['motive']
 
+# Assign User collection
+users = db['users']
+
 # Create FastAPI app
 app = FastAPI()
 
