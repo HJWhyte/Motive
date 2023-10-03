@@ -10,6 +10,12 @@ load_dotenv()
 # Assign DB connection string
 CONNECTION_STRING = os.getenv('CONNECTION_STRING')
 
+# Create MongoClient obj
+client = pymongo.MongoClient(CONNECTION_STRING)
+
+# Connect to the assigned DB 
+db = client['motive']
+
 # Create FastAPI app
 app = FastAPI()
 
