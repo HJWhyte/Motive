@@ -1,7 +1,16 @@
 from fastapi import FastAPI
 import uvicorn
+import os
+from dotenv import load_dotenv
+import pymongo
 
-## Create FastAPI app
+# Load .env file variables
+load_dotenv()
+
+# Assign DB connection string
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+
+# Create FastAPI app
 app = FastAPI()
 
 @app.get("/")
