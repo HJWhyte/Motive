@@ -1,10 +1,7 @@
-import sys
 import requests
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
-sys.path.insert(0, r"..")
-from main import app  # noqa: E402, E501,E501 pylint: disable=C0413
+from app.main import app 
 
 client = TestClient(app)
 
