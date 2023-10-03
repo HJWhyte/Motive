@@ -3,7 +3,7 @@ import sys
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-sys.append('..')
+sys.path.append('..')
 from app.main import app 
 
 client = TestClient(app)
