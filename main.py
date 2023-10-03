@@ -26,3 +26,9 @@ app = FastAPI()
 def root():
     """Basic API route test"""
     return {"Test" : "Route working!"}
+
+
+
+
+# Close the DB client connection
+client.close()
