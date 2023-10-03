@@ -29,6 +29,6 @@ steps:
   - task: PublishTestResults@2
     displayName: 'Publish Test Results **/TEST-*.xml'
     inputs:
-      searchFolder: tests/ci
+      searchFolder: tests
       failTaskOnFailedTests: true
     condition: always()
