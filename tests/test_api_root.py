@@ -12,4 +12,5 @@ def test_can_call_endpoint():
     '''Function to test if the api endpoint '''
     response = client.get("/")
     assert response.status_code == 200
+    assert response.json() == {"Test" : "Route working!"}
     pass
