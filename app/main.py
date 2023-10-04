@@ -33,7 +33,9 @@ def root():
 @app.post("/createUser")
 def createUser(username: str):
     '''User creation route'''
-    
+    user_id = uuid.uuid4()
+    userObj = { username : user_id } 
+    return userObj
 
 
 
