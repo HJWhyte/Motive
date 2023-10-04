@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uvicorn
 import os
 from dotenv import load_dotenv
@@ -48,7 +48,8 @@ def createUser(username: str):
                 "username" : username,
                 "user_id" : str(user_id)}
     except pymongo.errors.DuplicateKeyError as e:
-        return f"Insertion failed: {e}"
+        logging.error("Duplicate username, user creation failed")
+        raise HTTPException(status_code=400, detail=f"User creation failed: {e}")
 
 
 
