@@ -1,6 +1,7 @@
 import pymongo
 import os 
 from dotenv import load_dotenv
+import re
 
 # Load .env file variables
 load_dotenv()
@@ -15,9 +16,9 @@ db = client['motive']
 # Assign User collection
 users = db['users']
 
-# def clear_test_users():
-#     users.delete_many({
-#         "username" : {
-#             $regex: 'TEST'
-#         }
-#     })
+def clear_test_users():
+    substring = re.compile('TEST')
+    filter = {"username": {"$regex" : substring }}
+    users.delete_many(filter)
+    return
+
