@@ -14,3 +14,4 @@ def test_can_call_endpoint():
     assert response.status_code == 200
     assert response.json() == {"Test" : "Route working!"}
     pass
+

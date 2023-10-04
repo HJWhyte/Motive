@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import pymongo
 import logging
 
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ load_dotenv()
 
 # Assign DB connection string
 CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+# logging.info(f"CONNECTION_STRING: {CONNECTION_STRING}")
 
 # Create MongoClient obj and Connect to the assigned DB 
 client = pymongo.MongoClient(CONNECTION_STRING)
@@ -34,13 +36,17 @@ def root():
     """Basic API route test"""
     return {"Test" : "Route working!"}
 
+
 @app.post("/createUser")
 def createUser(username: str):
     '''User creation route'''
-    userObj = {'username' : username }
+    logging.info(f'Username: {username}')
     try:
-        userDoc = users.insert_one(userObj)
-        return('User successfully created!', userDoc)
+        user_doc = users.insert_one({'username' : username})
+        user_id = user_doc.inserted_id
+        return {"message": "User created successfully",
+                "username" : username,
+                "user_id" : str(user_id)}
     except pymongo.errors.DuplicateKeyError as e:
         return f"Insertion failed: {e}"
 
