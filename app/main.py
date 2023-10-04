@@ -3,7 +3,11 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 import pymongo
-import uuid
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load .env file variables
 load_dotenv()
@@ -33,11 +37,10 @@ def root():
 @app.post("/createUser")
 def createUser(username: str):
     '''User creation route'''
-    user_id = uuid.uuid4()
-    userObj = { username : user_id } 
+    userObj = {'username' : username }
     try:
-        users.insert_one(userObj)
-        return('User successfully created!', userObj)
+        userDoc = users.insert_one(userObj)
+        return('User successfully created!', userDoc)
     except pymongo.errors.DuplicateKeyError as e:
         return f"Insertion failed: {e}"
 
