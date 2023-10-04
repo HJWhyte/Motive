@@ -35,9 +35,13 @@ def createUser(username: str):
     '''User creation route'''
     user_id = uuid.uuid4()
     userObj = { username : user_id } 
-    return userObj
+    try:
+        users.insert_one(userObj)
+        return('User successfully created!', userObj)
+    except pymongo.errors.DuplicateKeyError as e:
+        return f"Insertion failed: {e}"
 
 
 
 # Close the DB client connection
-client.close()
+# client.close()
