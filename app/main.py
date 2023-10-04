@@ -3,6 +3,7 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 import pymongo
+import uuid
 
 # Load .env file variables
 load_dotenv()
