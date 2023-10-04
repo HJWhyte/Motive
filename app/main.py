@@ -10,14 +10,16 @@ load_dotenv()
 # Assign DB connection string
 CONNECTION_STRING = os.getenv('CONNECTION_STRING')
 
-# Create MongoClient obj
+# Create MongoClient obj and Connect to the assigned DB 
 client = pymongo.MongoClient(CONNECTION_STRING)
-
-# Connect to the assigned DB 
 db = client['motive']
 
 # Assign User collection
 users = db['users']
+
+# Create an index allowing only unique usernames
+users.create_index('username', unique=True)
+
 
 # Create FastAPI app
 app = FastAPI()
@@ -27,6 +29,10 @@ def root():
     """Basic API route test"""
     return {"Test" : "Route working!"}
 
+@app.post("/createUser")
+def createUser(username: str):
+    '''User creation route'''
+    
 
 
 
