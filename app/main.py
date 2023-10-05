@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import pymongo
 import logging
-from utils import db_connect, db_close
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -33,5 +33,6 @@ def createUser(username: str):
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate username, user creation failed")
         raise HTTPException(status_code=400, detail=f"User creation failed: {e}")
+    # Add DB Connection exception
     finally:
         db_close(client)
