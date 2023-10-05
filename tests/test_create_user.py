@@ -1,4 +1,7 @@
 import sys
+import os 
+from dotenv import load_dotenv
+import pymongo
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
