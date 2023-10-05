@@ -15,7 +15,7 @@ load_dotenv()
 
 # Assign DB connection string
 CONNECTION_STRING = os.getenv('CONNECTION_STRING')
-# logging.info(f"CONNECTION_STRING: {CONNECTION_STRING}")  
+# logging.info(f"CONNECTION_STRING: {CONNECTION_STRING}")  -- Not Sure If Ok
 
 # Create MongoClient obj and Connect to the assigned DB 
 client = pymongo.MongoClient(CONNECTION_STRING)
