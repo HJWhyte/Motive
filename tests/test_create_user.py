@@ -4,6 +4,20 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from utils import clear_test_users
 
+# Load .env file variables
+load_dotenv()
+
+# Assign DB connection string
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+# logging.info(f"CONNECTION_STRING: {CONNECTION_STRING}")  
+
+# Create MongoClient obj and Connect to the assigned DB 
+client = pymongo.MongoClient(CONNECTION_STRING)
+db = client['motive']
+
+# Assign User collection
+users = db['users']
+
 sys.path.append('..')
 from app.main import app 
 
