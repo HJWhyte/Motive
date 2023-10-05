@@ -4,29 +4,11 @@ import os
 from dotenv import load_dotenv
 import pymongo
 import logging
-
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Load .env file variables
-load_dotenv()
-
-# Assign DB connection string
-CONNECTION_STRING = os.getenv('CONNECTION_STRING')
-# logging.info(f"CONNECTION_STRING: {CONNECTION_STRING}")  -- Not Sure If Ok
-
-# Create MongoClient obj and Connect to the assigned DB 
-client = pymongo.MongoClient(CONNECTION_STRING)
-db = client['motive']
-
-# Assign User collection
-users = db['users']
-
-# Create an index allowing only unique usernames
-users.create_index('username', unique=True)
-
 
 # Create FastAPI app
 app = FastAPI()
@@ -42,6 +24,7 @@ def createUser(username: str):
     '''User creation route'''
     logging.info(f'Username: {username}')
     try:
+        client, users = db_connect()
         user_doc = users.insert_one({'username' : username})
         user_id = user_doc.inserted_id
         return {"message": "User created successfully",
@@ -50,8 +33,6 @@ def createUser(username: str):
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate username, user creation failed")
         raise HTTPException(status_code=400, detail=f"User creation failed: {e}")
-
-
-
-# Close the DB client connection
-# client.close()
+    # Add DB Connection exception
+    finally:
+        db_close(client)
