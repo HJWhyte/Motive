@@ -17,7 +17,7 @@ def db_connect():
     users = db['users']
     # Index allowing only unique usernames
     users.create_index('username', unique=True)
-    return client
+    return client, users
 
 def db_close(client):
     '''Closes DB connection'''
