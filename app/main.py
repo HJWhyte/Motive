@@ -53,5 +53,5 @@ def createUser(username: str):
 
 
 
-# Close the DB client connection
+
 # client.close()
