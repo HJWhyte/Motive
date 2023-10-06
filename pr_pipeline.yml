@@ -15,7 +15,7 @@ pool:
   vmImage: windows-latest
 
 variables:
-  CONNECTION_STRING: ${{ variables.connection_string }}
+  CONNECTION_STRING: $(connection_string)
 
 
 steps:
@@ -26,7 +26,7 @@ steps:
 
   - script: |
       pip install -r requirements.txt
-      pytest --junitxml=TEST-unit.xml
+      CONNECTION_STRING="$CONNECTION_STRING" pytest --junitxml=TEST-unit.xml
     workingDirectory: tests
     displayName: 'Unit : Pytest'
 
