@@ -30,7 +30,7 @@ def test_create_user_success(username):
     clear_test_users(db_users)
     db_close(db_client)
 
-def test_create_user_success():
+def test_duplicate_username_fail():
     '''Function to test the createUser route fails when intended'''
     
     username = "FAILTEST"
