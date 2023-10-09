@@ -33,6 +33,8 @@ def createUser(username: str):
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate username, user creation failed")
         raise HTTPException(status_code=400, detail=f"User creation failed: {e}")
-    # Add DB Connection exception
+    except pymongo.errors.ConnectionError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
     finally:
         db_close(client)
