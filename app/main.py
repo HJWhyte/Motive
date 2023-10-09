@@ -36,5 +36,8 @@ def createUser(username: str):
     except pymongo.errors.ConnectionError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except pymongo.errors.PyMongoError as e:
+        logging.error(f"MongoDB error: {e}")
+        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
     finally:
         db_close(client)
