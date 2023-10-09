@@ -14,10 +14,6 @@ parameters:
 pool:
   vmImage: windows-latest
 
-variables:
-  CONNECTION_STRING: $(connection_string)
-
-
 steps:
   - task: UsePythonVersion@0
     displayName: 'Use Python ${{ parameters.PythonVersion}}'
@@ -30,7 +26,7 @@ steps:
     workingDirectory: tests
     displayName: 'Unit : Pytest'
     env:
-      CONNECTION_STRING: $(CONNECTION_STRING)
+      CONNECTION_STRING: $(motive_db.connection_string)
 
   - task: PublishTestResults@2
     displayName: 'Publish Test Results **/TEST-*.xml'
