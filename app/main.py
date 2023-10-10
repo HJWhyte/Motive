@@ -45,9 +45,9 @@ def createUser(username: str):
         db_close(client)
 
 @app.post("/createMotive")
-def createMotive(motive_name : str, date_range: str, description: str = ''):
+def createMotive(motive_name : str, start_date: str, end_date: str, description: str = ''):
     '''Event object creation route'''
-    logging.info(f'Motive Name: {motive_name}, Date Range: {date_range}, Event Description: {description}')
+    logging.info(f'Motive Name: {motive_name}, Date Range: {start_date} - {end_date}, Event Description: {description}')
     try:
         client, users, events = db_connect()
 
