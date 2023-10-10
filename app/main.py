@@ -64,7 +64,6 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
                 "Motive Name" : motive_name,
                 "Date Range"  : [start_date, end_date],
                 "Event Description" : description,
-                "User Votes" : [],
                 "Event ID" : str(event_id)}
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate event name, event creation failed")
