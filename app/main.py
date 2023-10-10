@@ -60,7 +60,7 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
         event_doc = events.insert_one(eventObj)
         event_id = event_doc.inserted_id
         return {"Message" : "Motive event created successfully",
-                "Motive name" : motive_name,
+                "Motive Name" : motive_name,
                 "Date Range"  : [start_date, end_date],
                 "Event Description" : description,
                 "Event ID" : str(event_id)}
