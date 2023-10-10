@@ -6,7 +6,7 @@ import pymongo
 import logging
 from typing import Tuple
 from datetime import date, datetime
-from db import db_connect, db_close
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +26,7 @@ def createUser(username: str):
     '''User creation route'''
     logging.info(f'Username: {username}')
     try:
-        client, users = db_connect()
+        client, users, events = db_connect()
         user_doc = users.insert_one({'username' : username})
         user_id = user_doc.inserted_id
         return {"message": "User created successfully",
@@ -59,7 +59,8 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
                     "Event Description" : description}
         event_doc = events.insert_one(eventObj)
         event_id = event_doc.inserted_id
-        return {"Motive name" : motive_name,
+        return {"Message" : "Motive event created successfully",
+                "Motive name" : motive_name,
                 "Date Range"  : [start_date, end_date],
                 "Event Description" : description,
                 "Event ID" : str(event_id)}
