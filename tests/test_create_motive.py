@@ -31,3 +31,13 @@ def test_event_creation_success():
     assert "Event ID" in response_json
     clear_test_events(db_events)
     db_close(db_client)
+
+def test_event_username_fail():
+    '''Test for a failure if two events are created with the same name'''
+    name = 'FAILTEST'
+    start = "2000-01-08"
+    end = "2000-01-09"
+
+    db_client, db_users, db_events = db_connect()
+    response1 = test_client.post(f"/createMotive?motive_name={name}&start_date={start}&end_date={end}")
+    response2 = test_client.post(f"/createMotive?motive_name={name}&start_date={start}&end_date={end}")

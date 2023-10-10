@@ -19,6 +19,7 @@ def db_connect():
         events = db['events']
         # Index allowing only unique usernames
         users.create_index('username', unique=True)
+        events.create_index('Motive Name', unique=True)
         return client, users, events
     except pymongo.errors.ConnectionError as e:
         return logging.error(f"DB connection failed: {e}")
