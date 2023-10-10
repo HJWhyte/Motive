@@ -54,7 +54,7 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
         start_date = datetime.strptime(start_date, date_format)
         end_date = datetime.strptime(end_date,date_format)
 
-        eventObj = {"Motive name" : motive_name,
+        eventObj = {"Motive Name" : motive_name,
                     "Date Range"  : [start_date, end_date],
                     "Event Description" : description}
         event_doc = events.insert_one(eventObj)
