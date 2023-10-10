@@ -59,9 +59,14 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
                     "Event Description" : description}
         event_doc = events.insert_one(eventObj)
         event_id = event_doc.inserted_id
-        return
+        return {"Motive name" : motive_name,
+                "Date Range"  : [start_date, end_date],
+                "Event Description" : description,
+                "Event ID" : event_id}
     except:
         return
+    finally:
+        db_close(client)
 
 
 
