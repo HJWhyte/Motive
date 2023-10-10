@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import pymongo
 import logging
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -41,3 +41,18 @@ def createUser(username: str):
         raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
     finally:
         db_close(client)
+
+@app.post("/createMotive")
+def createMotive(username: str, motive_name : str, date_range: tuple, description: str = ''):
+    '''Event object creation route'''
+    logging.info(f'Username: {username}, Motive Name: {motive_name}, Date Range: {date_range}, Event Description: {description}')
+    try:
+        client, users = db_connect()
+        check_user = users.find_one({"username": username})
+        if check_user == None:
+            logging.error("User not found")
+            raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
+
+
+
+
