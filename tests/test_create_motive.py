@@ -41,3 +41,8 @@ def test_event_username_fail():
     db_client, db_users, db_events = db_connect()
     response1 = test_client.post(f"/createMotive?motive_name={name}&start_date={start}&end_date={end}")
     response2 = test_client.post(f"/createMotive?motive_name={name}&start_date={start}&end_date={end}")
+    assert response2.status_code == 400
+    response_json = response2.json()
+    assert "Event creation failed" in response_json["detail"]
+    clear_test_events(db_events)
+    db_close(db_client)
