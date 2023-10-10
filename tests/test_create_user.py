@@ -17,7 +17,7 @@ test_client = TestClient(app)
 def test_create_user_success(username):
     '''Function to test the createUser route works as intended'''
 
-    db_client, db_users = db_connect()
+    db_client, db_users, db_events = db_connect()
     response = test_client.post(f"/createUser?username={username}")
     # Check if the response status code is 200 (OK)
     assert response.status_code == 200
@@ -32,9 +32,9 @@ def test_create_user_success(username):
 
 def test_duplicate_username_fail():
     '''Function to test the createUser route fails when intended'''
-    
+
     username = "FAILTEST"
-    db_client, db_users = db_connect()
+    db_client, db_users, db_events = db_connect()
     # Make 2 post requests with the same username
     response1 = test_client.post(f"/createUser?username={username}")
     response2 = test_client.post(f"/createUser?username={username}")
