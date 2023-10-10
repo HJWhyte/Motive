@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 import uvicorn
 import os
 from dotenv import load_dotenv
 import pymongo
 import logging
+from typing import Tuple
 from datetime import date
 from db import db_connect, db_close
 
@@ -44,14 +45,22 @@ def createUser(username: str):
         db_close(client)
 
 @app.post("/createMotive")
-def createMotive(motive_name : str, date_range: tuple(date(),date()), description: str = ''):
+def createMotive(motive_name : str, date_range: str, description: str = ''):
     '''Event object creation route'''
     logging.info(f'Motive Name: {motive_name}, Date Range: {date_range}, Event Description: {description}')
     try:
-        client, users = db_connect()
+        client, users, events = db_connect()
+
+
+        
         eventObj = {"Motive name" : motive_name,
-                    "Date Range"  : date_range,
+                    "Date Range"  : ,
                     "Event Description" : description}
+        event_doc = events.insert_one(eventObj)
+        # event_id = event_doc.inserted_id
+        return
+    except:
+        return
 
 
 

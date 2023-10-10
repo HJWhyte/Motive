@@ -14,11 +14,12 @@ def db_connect():
         # Create MongoClient obj and Connect to the assigned DB 
         client = pymongo.MongoClient(CONNECTION_STRING)
         db = client['motive']
-        # Assign User collection
+        # Assign collections
         users = db['users']
+        events = db['events']
         # Index allowing only unique usernames
         users.create_index('username', unique=True)
-        return client, users
+        return client, users, events
     except pymongo.errors.ConnectionError as e:
         return logging.error(f"DB connection failed: {e}")
 
