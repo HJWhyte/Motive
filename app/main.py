@@ -62,9 +62,16 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
         return {"Motive name" : motive_name,
                 "Date Range"  : [start_date, end_date],
                 "Event Description" : description,
-                "Event ID" : event_id}
-    except:
-        return
+                "Event ID" : str(event_id)}
+    except pymongo.errors.DuplicateKeyError as e:
+        logging.error("Duplicate event name, event creation failed")
+        raise HTTPException(status_code=400, detail=f"Event creation failed: {e}")
+    except pymongo.errors.ConnectionError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except pymongo.errors.PyMongoError as e:
+        logging.error(f"MongoDB error: {e}")
+        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
     finally:
         db_close(client)
 
