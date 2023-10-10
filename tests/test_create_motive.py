@@ -5,7 +5,7 @@ import pymongo
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from utils import clear_test_users
+from utils import clear_test_events
 
 sys.path.append('..')
 from app.main import app
@@ -29,5 +29,5 @@ def test_event_creation_success():
     assert response_json["Motive Name"] == name
     # Ensure user_id is present in the response
     assert "Event ID" in response_json
-    clear_test_users(db_events)
+    clear_test_events(db_events)
     db_close(db_client)
