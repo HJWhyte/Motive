@@ -50,9 +50,8 @@ def createMotive(motive_name : str, date_range: tuple(date(),date()), descriptio
     try:
         client, users = db_connect()
         eventObj = {"Motive name" : motive_name,
-                    "Date Range"
-            
-        }
+                    "Date Range"  : date_range,
+                    "Event Description" : description}
 
 
 
