@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import pymongo
 import logging
 from typing import Tuple
-from datetime import date
+from datetime import date, datetime
 from db import db_connect, db_close
 
 # Set up logging
@@ -50,14 +50,15 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
     logging.info(f'Motive Name: {motive_name}, Date Range: {start_date} - {end_date}, Event Description: {description}')
     try:
         client, users, events = db_connect()
+        date_format = "%Y-%m-%d"  # Year-month-day format
+        start_date = datetime.strptime(start_date, date_format)
+        end_date = datetime.strptime(end_date,date_format)
 
-
-        
         eventObj = {"Motive name" : motive_name,
-                    "Date Range"  : ,
+                    "Date Range"  : [start_date, end_date],
                     "Event Description" : description}
         event_doc = events.insert_one(eventObj)
-        # event_id = event_doc.inserted_id
+        event_id = event_doc.inserted_id
         return
     except:
         return
