@@ -20,10 +20,17 @@ def root():
     """Basic API route test"""
     return {"Test" : "Route working!"}
 
+@app.get("/motive")
+def home():
+    """Home Page - refer to user / event creation"""
+    return {"Message" : "Welcome to Motive!",
+            "Create a user" : "/createUser",
+            "Create an event" : "/createMotive"}
+
 
 @app.post("/createUser")
 def createUser(username: str):
-    '''User creation route'''
+    """User creation route"""
     logging.info(f'Username: {username}')
     try:
         client, users, events = db_connect()
@@ -46,7 +53,7 @@ def createUser(username: str):
 
 @app.post("/createMotive")
 def createMotive(motive_name : str, start_date: str, end_date: str, description: str = ''):
-    '''Event object creation route - NOTE all dates must follow the y-m-d format.'''
+    """Event object creation route - NOTE all dates must follow the y-m-d format"""
     logging.info(f'Motive Name: {motive_name}, Date Range: {start_date} - {end_date}, Event Description: {description}')
     try:
         client, users, events = db_connect()
