@@ -15,6 +15,7 @@ test_client = TestClient(app)
 
 def test_event_creation_success():
     '''Test an event can be successfully created'''
+
     name = 'TEST'
     start = "2000-01-08"
     end = "2000-01-09"
@@ -34,6 +35,7 @@ def test_event_creation_success():
 
 def test_event_username_fail():
     '''Test for a failure if two events are created with the same name'''
+
     name = 'FAILTEST'
     start = "2000-01-08"
     end = "2000-01-09"
