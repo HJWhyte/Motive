@@ -99,7 +99,10 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
             logging.error("User not found")
             raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
         voteObj = {username: availability}
-        r
+        filter = {'Motive Name': motive_name}
+        update = {"$push" : { 'User Votes' : voteObj}}
+        events.update_one(filter, update)
+        return {f"{username}" : f"Availblity succesfully added to {motive_name}"}
     except pymongo.errors.ConnectionError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
