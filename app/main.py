@@ -98,7 +98,8 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         if check_user == None:
             logging.error("User not found")
             raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
-        return {"hello":"hi"}
+        voteObj = {username: availability}
+        r
     except pymongo.errors.ConnectionError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
