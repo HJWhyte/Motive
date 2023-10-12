@@ -85,20 +85,29 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
         db_close(client)
 
 @app.post('/vote/{motive_name}')
-def motive_vote(motive_name):
+def motive_vote(motive_name: str, username: str, availability: list):
     """Event vote submission route"""
     logging.info(f'Motive Name: {motive_name}')
     try:
         client, users, events = db_connect()
-        check_valid_event = events.find_one({'Motive Name' : motive_name})
-        if check_valid_event == None:
+        check_event = events.find_one({'Motive Name' : motive_name})
+        check_user = users.find_one({"username": username})
+        if check_event == None:
                 logging.error("Event not found")
                 raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
+        if check_user == None:
+            logging.error("User not found")
+            raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
+        
+
+    except pymongo.errors.ConnectionError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except pymongo.errors.PyMongoError as e:
+        logging.error(f"MongoDB error: {e}")
+        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
+    finally:
+        db_close(client)
 
 
 
-# client, users = db_connect()
-# check_user = users.find_one({"username": username})
-# if check_user == None:
-#     logging.error("User not found")
-#     raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
