@@ -6,7 +6,7 @@ import pymongo
 import logging
 from typing import Tuple
 from datetime import date, datetime
-from db import db_connect, db_close
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -94,7 +94,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         check_user = users.find_one({"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
-        
+
         if check_event == None:
                 logging.error("Event not found")
                 raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
@@ -109,7 +109,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         filter = {'Motive Name': motive_name}
         update = {"$push" : { 'User Votes' : voteObj}}
         events.update_one(filter, update)
-        return {f"{username}" : f"Availblity succesfully added to {motive_name}"}
+        return {f"{username}" : f"Availablity succesfully added to {motive_name}"}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
