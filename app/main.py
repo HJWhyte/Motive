@@ -6,7 +6,7 @@ import pymongo
 import logging
 from typing import Tuple
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -85,7 +85,7 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
         db_close(client)
 
 @app.post('/vote/{motive_name}')
-def motive_vote(motive_name: str, username: str, availability: list):
+def motive_vote(motive_name: str, username: str, availability: list = Query(..., title="List of available dates")):
     """Event vote submission route"""
     logging.info(f'Motive Name: {motive_name}')
     try:
@@ -98,8 +98,7 @@ def motive_vote(motive_name: str, username: str, availability: list):
         if check_user == None:
             logging.error("User not found")
             raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
-        
-
+        return {"hello":"hi"}
     except pymongo.errors.ConnectionError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
