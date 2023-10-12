@@ -42,12 +42,12 @@ def createUser(username: str):
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate username, user creation failed")
         raise HTTPException(status_code=400, detail=f"User creation failed: {e}")
-    except pymongo.errors.ConnectionError as e:
+    except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-    except pymongo.errors.PyMongoError as e:
-        logging.error(f"MongoDB error: {e}")
-        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
     finally:
         db_close(client)
 
@@ -75,12 +75,12 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate event name, event creation failed")
         raise HTTPException(status_code=400, detail=f"Event creation failed: {e}")
-    except pymongo.errors.ConnectionError as e:
+    except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-    except pymongo.errors.PyMongoError as e:
-        logging.error(f"MongoDB error: {e}")
-        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
     finally:
         db_close(client)
 
@@ -98,17 +98,25 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         if check_user == None:
             logging.error("User not found")
             raise HTTPException(status_code=404, detail=f"A valid username could not be found.")
+        
+        username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
+        existing_vote = events.find_one(username_filter)
+
+        if existing_vote:
+            logging.error("Username already voted for this event")
+            raise HTTPException(status_code=400, detail="User has already voted for this event.")
+        
         voteObj = {username: availability}
         filter = {'Motive Name': motive_name}
         update = {"$push" : { 'User Votes' : voteObj}}
         events.update_one(filter, update)
         return {f"{username}" : f"Availblity succesfully added to {motive_name}"}
-    except pymongo.errors.ConnectionError as e:
+    except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-    except pymongo.errors.PyMongoError as e:
-        logging.error(f"MongoDB error: {e}")
-        raise HTTPException(status_code=500, detail=f"An unexpected database error occurred: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
     finally:
         db_close(client)
 
