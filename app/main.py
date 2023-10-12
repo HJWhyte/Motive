@@ -84,7 +84,16 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
     finally:
         db_close(client)
 
-
+@app.post('/vote/{motive_name}')
+def motive_vote(motive_name):
+    """Event vote submission route"""
+    logging.info(f'Motive Name: {motive_name}')
+    try:
+        client, users, events = db_connect()
+        check_valid_event = events.find_one({'Motive Name' : motive_name})
+        if check_valid_event == None:
+                logging.error("Event not found")
+                raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
 
 
 
