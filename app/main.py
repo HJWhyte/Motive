@@ -94,6 +94,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         check_user = users.find_one({"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
+        
         if check_event == None:
                 logging.error("Event not found")
                 raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
@@ -103,6 +104,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         if existing_vote:
             logging.error("Username already voted for this event")
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
+        
         voteObj = {username: availability}
         filter = {'Motive Name': motive_name}
         update = {"$push" : { 'User Votes' : voteObj}}
