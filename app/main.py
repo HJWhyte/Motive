@@ -84,6 +84,23 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
     finally:
         db_close(client)
 
+@app.get('/view/{motive_name}')
+def motive_view(motive_name: str):
+    """Show the current state of the event"""
+    logging.info(f'Motive Name: {motive_name}')
+    try:
+        client, users, events = db_connect()
+        motive = events.find_one({'Motive Name' : motive_name})
+        return motive
+    except pymongo.errors.PyMongoError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
+    finally:
+        db_close(client)
+
 @app.post('/vote/{motive_name}')
 def motive_vote(motive_name: str, username: str, availability: list = Query(..., title="List of available dates")):
     """Event vote submission route"""
@@ -91,7 +108,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
     try:
         client, users, events = db_connect()
         check_event = events.find_one({'Motive Name' : motive_name})
-        check_user = users.find_one({"username": username})
+        check_user = users.find_one(@{"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
 
