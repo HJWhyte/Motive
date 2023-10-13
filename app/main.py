@@ -92,14 +92,7 @@ def motive_view(motive_name: str):
         client, users, events = db_connect()
         motive = events.find_one({'Motive Name' : motive_name})
         return motive
-    except pymongo.errors.PyMongoError as e:
-        logging.error("DB connection failed")
-        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-    except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
-        raise HTTPException(status_code=500, detail="An unexpected error occurred")
-    finally:
-        db_close(client)
+    
 
 @app.post('/vote/{motive_name}')
 def motive_vote(motive_name: str, username: str, availability: list = Query(..., title="List of available dates")):
