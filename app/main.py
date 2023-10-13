@@ -94,8 +94,9 @@ def motive_view(motive_name: str):
         client, users, events = db_connect()
         motive = events.find_one({'Motive Name' : motive_name})
         logging.info(f"Event Found: {motive}")
-        motive = json.dumps(motive)
-        return motive
+        jsonObj = json_util.dumps(motive)
+        parsed_json = json.loads(jsonObj)
+        return parsed_json
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
