@@ -1,12 +1,13 @@
 from fastapi import FastAPI, HTTPException, Query
 import uvicorn
 import os
+import json
 from dotenv import load_dotenv
 import pymongo
 import logging
 from typing import Tuple
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -91,6 +92,7 @@ def motive_view(motive_name: str):
     try:
         client, users, events = db_connect()
         motive = events.find_one({'Motive Name' : motive_name})
+        logging.info(motive)
         return motive
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
@@ -108,7 +110,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
     try:
         client, users, events = db_connect()
         check_event = events.find_one({'Motive Name' : motive_name})
-        check_user = users.find_one(@{"username": username})
+        check_user = users.find_one({"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
 
