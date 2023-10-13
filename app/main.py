@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Query
 import uvicorn
 import os
 import json
+from bson import json_util
 from dotenv import load_dotenv
 import pymongo
 import logging
@@ -92,7 +93,8 @@ def motive_view(motive_name: str):
     try:
         client, users, events = db_connect()
         motive = events.find_one({'Motive Name' : motive_name})
-        logging.info(motive)
+        logging.info(f"Event Found: {motive}")
+        motive = json.dumps(motive)
         return motive
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
