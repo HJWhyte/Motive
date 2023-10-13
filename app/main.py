@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
 import uvicorn
 import os
+import json
+from bson import json_util
 from dotenv import load_dotenv
 import pymongo
 import logging
@@ -75,6 +77,26 @@ def createMotive(motive_name : str, start_date: str, end_date: str, description:
     except pymongo.errors.DuplicateKeyError as e:
         logging.error("Duplicate event name, event creation failed")
         raise HTTPException(status_code=400, detail=f"Event creation failed: {e}")
+    except pymongo.errors.PyMongoError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
+    finally:
+        db_close(client)
+
+@app.get('/view/{motive_name}')
+def motive_view(motive_name: str):
+    """Show the current state of the event"""
+    logging.info(f'Motive Name: {motive_name}')
+    try:
+        client, users, events = db_connect()
+        motive = events.find_one({'Motive Name' : motive_name})
+        logging.info(f"Event Found: {motive}")
+        jsonObj = json_util.dumps(motive)
+        parsed_json = json.loads(jsonObj)
+        return parsed_json
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
