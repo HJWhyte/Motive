@@ -8,7 +8,7 @@ import pymongo
 import logging
 from typing import Tuple
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -145,7 +145,19 @@ def output(motive_name: str):
     logging.info(f'Motive Name: {motive_name}')
     try:
         client, users, events = db_connect()
-        check_event = events.find_one({'Motive Name' : motive_name})
+        motive = events.find_one({'Motive Name' : motive_name})
+        logging.info(f"Event Found: {motive}")
+        jsonObj = json_util.dumps(motive)
+        parsed_json = json.loads(jsonObj)
+        return parsed_json
+    except pymongo.errors.PyMongoError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
+    finally:
+        db_close(client)
 
 
 
