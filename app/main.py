@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import pymongo
 import logging
 from typing import Tuple
+from collections import Counter
 from datetime import date, datetime
 from db import db_connect, db_close
 
@@ -155,7 +156,13 @@ def output(motive_name: str):
         for user_data in user_votes:
             for date in user_data.values():
                 votes.append(date)
-        return votes
+        logging.info(f'Vote array: {votes}')
+        flat_list = [elem for sublist in votes for elem in sublist]
+        vote_count = Counter(flat_list)
+        optimal = vote_count.most_common(1)
+        return {"message": "The most optimal date for the event is...",
+                "date" : f"{optimal[1]}",
+                "votes" : f"{optimal[2]}"}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
