@@ -9,7 +9,7 @@ import logging
 from typing import Tuple
 from collections import Counter
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -134,9 +134,6 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
-    except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
-        raise HTTPException(status_code=500, detail="An unexpected error occurred")
     finally:
         db_close(client)
 
