@@ -150,7 +150,12 @@ def output(motive_name: str):
         jsonObj = json_util.dumps(motive)
         parsed_json = json.loads(jsonObj)
         user_votes = parsed_json["User Votes"]
-        for user_vote in user_votes:
+        logging.info(f'User votes: {user_votes}')
+        votes = []
+        for user_data in user_votes:
+            for date in user_data.values():
+                votes.append(date)
+        return votes
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
