@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import pymongo
 import logging
 from typing import Tuple
+from collections import Counter
 from datetime import date, datetime
 from app.db import db_connect, db_close
 
@@ -116,7 +117,6 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         check_user = users.find_one({"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
-
         if check_event == None:
                 logging.error("Event not found")
                 raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
@@ -126,7 +126,6 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         if existing_vote:
             logging.error("Username already voted for this event")
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
-        
         voteObj = {username: availability}
         filter = {'Motive Name': motive_name}
         update = {"$push" : { 'User Votes' : voteObj}}
@@ -135,11 +134,42 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
+    finally:
+        db_close(client)
+
+@app.get('/output/{motive_name}')
+def output(motive_name: str):
+    """Show the optimal event dates"""
+    logging.info(f'Motive Name: {motive_name}')
+    try:
+        client, users, events = db_connect()
+        motive = events.find_one({'Motive Name' : motive_name})
+        logging.info(f"Event Found: {motive}")
+        jsonObj = json_util.dumps(motive)
+        parsed_json = json.loads(jsonObj)
+        user_votes = parsed_json["User Votes"]
+        logging.info(f'User votes: {user_votes}')
+        votes = []
+        for user_data in user_votes:
+            for date in user_data.values():
+                votes.append(date)
+        logging.info(f'Vote array: {votes}')
+        flat_list = [elem for sublist in votes for elem in sublist]
+        vote_count = Counter(flat_list)
+        optimal = vote_count.most_common(1)
+        logging.info(f'Optimal array: {optimal}')
+        return {"message": "The most optimal date for the event is...",
+                "date" : f"{optimal[0][0]}",
+                "votes" : f"{optimal[0][1]}"}
+    except pymongo.errors.PyMongoError as e:
+        logging.error("DB connection failed")
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
         raise HTTPException(status_code=500, detail="An unexpected error occurred")
     finally:
         db_close(client)
+
 
 
 
