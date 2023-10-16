@@ -160,9 +160,10 @@ def output(motive_name: str):
         flat_list = [elem for sublist in votes for elem in sublist]
         vote_count = Counter(flat_list)
         optimal = vote_count.most_common(1)
+        logging.info(f'Optimal array: {optimal}')
         return {"message": "The most optimal date for the event is...",
-                "date" : f"{optimal[1]}",
-                "votes" : f"{optimal[2]}"}
+                "date" : f"{optimal[0][0]}",
+                "votes" : f"{optimal[0][1]}"}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
