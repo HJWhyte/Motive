@@ -9,7 +9,7 @@ import logging
 from typing import Tuple
 from collections import Counter
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -158,10 +158,12 @@ def output(motive_name: str):
         logging.info(f'Flattened list: {flat_list}')
         vote_count = Counter(flat_list)
         output = []
-        for date, count in vote_count.items():
+        sorted_items = sorted(vote_count.items(), key=lambda x: x[1], reverse=True)
+        for date, count in sorted_items:
             output.append(f'Date: {date}, Votes: {count}')
+        
         logging.info(f'Optimal date array: {output}')
-        return {"message": "The most optimal dates are..."
+        return {"message": "The most optimal dates are...",
                 "output" : output}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
