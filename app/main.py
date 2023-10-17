@@ -155,12 +155,16 @@ def output(motive_name: str):
                 votes.append(date)
         logging.info(f'Vote array: {votes}')
         flat_list = [elem for sublist in votes for elem in sublist]
+        logging.info(f'Flattened list: {flat_list}')
         vote_count = Counter(flat_list)
-        optimal = vote_count.most_common(1)
-        logging.info(f'Optimal array: {optimal}')
-        return {"message": "The most optimal date for the event is...",
-                "date" : f"{optimal[0][0]}",
-                "votes" : f"{optimal[0][1]}"}
+        output = []
+        sorted_items = sorted(vote_count.items(), key=lambda x: x[1], reverse=True)
+        for date, count in sorted_items:
+            output.append(f'Date: {date}, Votes: {count}')
+        
+        logging.info(f'Optimal date array: {output}')
+        return {"message": f"The optimal dates for {motive_name} are...",
+                "output" : output}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
