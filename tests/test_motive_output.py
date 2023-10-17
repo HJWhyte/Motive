@@ -28,7 +28,7 @@ def test_motive_vote_success():
     client.post(f"/vote/{name}?motive_name={name}&username={username2}&availability={availability2[0]}&availability={availability2[1]}")
     response = client.get(f"/output/{name}")
     response_json = response.json()
-    assert "The most optimal date for the event is..." in response_json["message"]
+    assert f"The optimal dates for {name} are" in response_json["message"]
     assert response.status_code == 200
     clear_test_events(db_events)
     clear_test_users(db_users)

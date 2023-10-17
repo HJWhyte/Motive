@@ -9,7 +9,7 @@ import logging
 from typing import Tuple
 from collections import Counter
 from datetime import date, datetime
-from db import db_connect, db_close
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -163,7 +163,7 @@ def output(motive_name: str):
             output.append(f'Date: {date}, Votes: {count}')
         
         logging.info(f'Optimal date array: {output}')
-        return {"message": "The most optimal dates are...",
+        return {"message": f"The optimal dates for {motive_name} are...",
                 "output" : output}
     except pymongo.errors.PyMongoError as e:
         logging.error("DB connection failed")
