@@ -132,6 +132,11 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         start_date = date_range[0].get("$date")
         end_date = date_range[1].get("$date")
 
+        for date in availability:
+            if not (start_date <= date <= end_date):
+                logging.error("Date not in the valid range")
+                raise HTTPException(status_code=400, detail="Availability dates must be within the event's date range.")
+
 
         voteObj = {username: availability}
         filter = {'Motive Name': motive_name}
