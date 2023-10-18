@@ -117,6 +117,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         check_user = users.find_one({"username": username})
         username_filter = {'Motive Name': motive_name, 'User Votes': {'$elemMatch': {username: {'$exists': True}}}}
         existing_vote = events.find_one(username_filter)
+
         if check_event == None:
                 logging.error("Event not found")
                 raise HTTPException(status_code=404, detail=f"A valid event could not be found.")
@@ -126,6 +127,21 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
         if existing_vote:
             logging.error("Username already voted for this event")
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
+        
+        available_dates = [datetime.strptime(date, "%Y-%m-%d") for date in availability]
+
+        date_range = check_event.get("Date Range", [])
+        start_date = date_range[0]
+        logging.info(f'Start Date: {start_date}')
+        end_date = date_range[1]
+        logging.info(f'End Date: {end_date}')
+
+        for date in available_dates:
+            if not (start_date <= date <= end_date):
+                logging.error("Date not in the valid range")
+                raise HTTPException(status_code=400, detail="Availability dates must be within the event's date range.")
+
+
         voteObj = {username: availability}
         filter = {'Motive Name': motive_name}
         update = {"$push" : { 'User Votes' : voteObj}}
