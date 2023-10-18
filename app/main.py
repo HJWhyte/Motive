@@ -9,7 +9,7 @@ import logging
 from typing import Tuple
 from collections import Counter
 from datetime import date, datetime
-from app.db import db_connect, db_close
+from db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
