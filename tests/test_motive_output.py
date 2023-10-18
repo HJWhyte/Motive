@@ -10,7 +10,7 @@ from app.db import db_connect, db_close
 
 client = TestClient(app)
 
-def test_motive_vote_success():
+def test_motive_output_success():
     """Test that an event can be succesfully voted on"""
 
     name = "TESTEVENT"

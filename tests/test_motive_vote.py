@@ -13,8 +13,8 @@ client = TestClient(app)
 def test_motive_vote_success():
     """Test that an event can be succesfully voted on"""
 
-    name = "TESTEVENT"
-    username = "TESTUSER"
+    name = "TESTEVENT1"
+    username = "TESTUSER1"
     start = "2000-01-08"
     end = "2000-01-20"
     availability = ["2000-01-10", "2000-01-15"]
@@ -33,8 +33,8 @@ def test_motive_vote_success():
 def test_motive_invalid_date_fail():
     """Test that an event will not allow the same user to vote on it twice"""
 
-    name = "TESTEVENT"
-    username = "TESTUSER1"
+    name = "TESTEVENT2"
+    username = "TESTUSER2"
     start = "2000-01-08"
     end = "2000-01-20"
     availability = ["2000-02-10", "2000-02-15"]

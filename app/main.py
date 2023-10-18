@@ -9,7 +9,7 @@ import logging
 from typing import Tuple
 from collections import Counter
 from datetime import date, datetime
-from db import db_connect, db_close
+from app.db import db_connect, db_close
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -128,11 +128,15 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
             logging.error("Username already voted for this event")
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
         
-        date_range = check_event.get("Date Range", [])
-        start_date = date_range[0].get("$date")
-        end_date = date_range[1].get("$date")
+        available_dates = [datetime.strptime(date, "%Y-%m-%d") for date in availability]
 
-        for date in availability:
+        date_range = check_event.get("Date Range", [])
+        start_date = date_range[0]
+        logging.info(f'Start Date: {start_date}')
+        end_date = date_range[1]
+        logging.info(f'End Date: {end_date}')
+
+        for date in available_dates:
             if not (start_date <= date <= end_date):
                 logging.error("Date not in the valid range")
                 raise HTTPException(status_code=400, detail="Availability dates must be within the event's date range.")
