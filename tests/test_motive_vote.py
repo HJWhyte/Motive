@@ -31,7 +31,7 @@ def test_motive_vote_success():
     db_close(db_client)
 
 def test_motive_invalid_date_fail():
-    """Test that an event will not allow the same user to vote on it twice"""
+    """Test that an event will not allow the a user to input an invalid date"""
 
     name = "TESTEVENT2"
     username = "TESTUSER2"
