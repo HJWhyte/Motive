@@ -129,7 +129,8 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
         
         date_range = check_event.get("Date Range", [])
-        
+        start_date = date_range[0].get("$date")
+        end_date = date_range[1].get("$date")
 
 
         voteObj = {username: availability}
