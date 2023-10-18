@@ -129,9 +129,7 @@ def motive_vote(motive_name: str, username: str, availability: list = Query(...,
             raise HTTPException(status_code=400, detail="User has already voted for this event.")
         
         date_range = check_event.get("Date Range", [])
-        if len(date_range) != 2:
-            logging.error("Invalid Date Range")
-            raise HTTPException(status_code=400, detail="Invalid Date Range.")
+        
 
 
         voteObj = {username: availability}
